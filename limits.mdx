@@ -1,0 +1,15 @@
+---
+title: "Limits and retries"
+description: "Rate limits, timeouts and what to retry."
+---
+
+- 10 requests per second per key, with bursts up to 10.
+- Retry `model_warming`, `upstream_error` and `rate_limited` with exponential backoff. Don't retry 4xx input errors.
+- Allow up to 60 seconds per request. The first call after a quiet spell can be slow while the detector starts.
+
+| Limit | Value |
+| --- | --- |
+| Image size | 20 MB |
+| Batch size | 1–8 images, 25 MB in total |
+| Shortest side | 256 px or more |
+| JPEG quality | about 50 or more |

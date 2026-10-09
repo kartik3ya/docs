@@ -1,0 +1,22 @@
+---
+title: "Image storage"
+description: "Images sent with an API key aren't stored unless you ask."
+---
+
+By default an image sent with an API key is processed in memory and not stored; only the SHA-256 hash of the file, the verdict and the scores are kept.
+
+## Keeping images
+
+To keep images, either:
+
+- turn on **Store images** for the key in your [dashboard](https://checkobot.ai/dashboard/keys), or
+- send `store=true` with a request:
+  - as a query parameter: `POST /v1/check?store=true`
+  - as a `store` form field with multipart uploads
+  - as `"store": true` in a JSON body
+
+`store=false` skips storage for one request even when the key's switch is on. It works the same on `/v1/check/batch`, for every image in the call.
+
+## What happens to stored images
+
+Stored images are encrypted and kept for your plan's 30-day history, then deleted. You can see and remove them in your dashboard history. They aren't shown on the check's result page unless you choose to show them there.

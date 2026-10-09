@@ -1,0 +1,31 @@
+---
+title: "Usage"
+description: "GET /v1/usage: checks used in the current period."
+---
+
+```
+GET https://api.checkobot.ai/v1/usage
+```
+
+Checks used in the current period (calendar month, UTC).
+
+```bash curl
+curl https://api.checkobot.ai/v1/usage \
+  -H "Authorization: Bearer $CHECKOBOT_API_KEY"
+```
+
+```json 200 response
+{ "plan": "api_starter", "period": "2026-10", "used": 1204, "quota": 5000, "overage": 0 }
+```
+
+## Overage
+
+On API plans, checks past the allowance are allowed and counted as `overage`, billed monthly at your plan's rate:
+
+| Plan | Per check past the allowance |
+| --- | --- |
+| API Starter | $0.012 |
+| API Growth | $0.009 |
+| API Scale | $0.006 |
+
+See [pricing](https://checkobot.ai/pricing) for each plan's allowance.

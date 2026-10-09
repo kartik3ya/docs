@@ -1,72 +1,67 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mintlify Starter Kit",
+  "name": "Checkobot API",
+  "description": "Endpoints, authentication, errors and code samples for the Checkobot AI image detection API.",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#4d7c0f",
+    "light": "#c6f24e",
+    "dark": "#121812"
+  },
+  "fonts": {
+    "heading": { "family": "Bricolage Grotesque", "weight": 700 },
+    "body": { "family": "IBM Plex Sans" }
   },
   "favicon": "/favicon.svg",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg",
+    "href": "https://checkobot.ai"
+  },
   "navigation": {
-    "pages": [
+    "groups": [
       {
-        "group": "Getting Started",
-        "pages": [
-          "index",
-          "quickstart"
-        ]
+        "group": "Get started",
+        "pages": ["index", "authentication"]
+      },
+      {
+        "group": "Endpoints",
+        "pages": ["check", "batch", "usage"]
+      },
+      {
+        "group": "Reference",
+        "pages": ["image-storage", "errors", "limits"]
       }
     ],
     "global": {
       "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
+        { "anchor": "Check an image", "href": "https://checkobot.ai", "icon": "image" },
+        { "anchor": "Pricing", "href": "https://checkobot.ai/pricing", "icon": "tag" },
+        { "anchor": "Status", "href": "https://checkobot.ai/status", "icon": "signal" }
       ]
     }
   },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
   "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:support@mintlify.com"
-      }
-    ],
+    "links": [{ "label": "Contact sales", "href": "mailto:sales@checkobot.ai" }],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://app.mintlify.com"
+      "label": "Get an API key",
+      "href": "https://checkobot.ai/dashboard/keys"
     }
   },
   "contextual": {
-    "options": [
-      "copy",
-      "view",
-      "chatgpt",
-      "claude",
-      "perplexity",
-      "mcp",
-      "cursor",
-      "vscode"
-    ]
+    "options": ["copy", "view", "chatgpt", "claude", "perplexity", "mcp", "cursor", "vscode"]
   },
   "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
+    "links": [
+      {
+        "header": "Checkobot",
+        "items": [
+          { "label": "Check an image", "href": "https://checkobot.ai" },
+          { "label": "Pricing", "href": "https://checkobot.ai/pricing" },
+          { "label": "Privacy", "href": "https://checkobot.ai/privacy" }
+        ]
+      }
+    ]
   }
 }
