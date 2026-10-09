@@ -1,0 +1,30 @@
+---
+title: "Errors"
+description: "Every error has the same shape. Branch on code."
+---
+
+Every error has the same shape. Branch on `code`; the `message` is for humans.
+
+```json error
+{ "error": { "code": "image_too_small", "message": "This image is too small to check reliably (200×300). Try a copy at least 256 px on its shorter side." } }
+```
+
+| code | HTTP | When |
+| --- | --- | --- |
+| `bad_request` | 400 | Malformed body, no image field, invalid base64, a store value other than true/false, or a batch outside 1–8 images. |
+| `url_fetch_failed` | 400 | `image_url` couldn't be fetched: not http(s), a non-standard port, a private address, a non-200 response, or too many redirects. |
+| `unauthorized` | 401 | Missing, invalid or revoked API key. |
+| `plan_required` | 403 | The key's plan has no API access, or the endpoint needs a higher plan (batch is API Growth and above). |
+| `image_too_large` | 413 | Image over 20 MB, or a batch over 25 MB in total. |
+| `unsupported_format` | 415 | HEIC/HEIF, a file that isn't an image, or one the detector couldn't decode. |
+| `image_too_small` | 422 | Shorter side under 256 px. Refused rather than judged; not metered. |
+| `image_too_compressed` | 422 | JPEG quality below about 50. Refused rather than judged; not metered. |
+| `content_refused` | 422 | The image can't be checked. Not metered. Don't retry the same image. |
+| `quota_exceeded` | 429 | Monthly allowance used up on a plan without overage. |
+| `rate_limited` | 429 | More than 10 requests per second on one key (burst of 10). |
+| `model_warming` | 503 | The detector is starting up after a quiet spell. Retry after `retry_after_s` (also sent as `Retry-After`). Not metered. |
+| `safety_check_unavailable` | 503 | A pre-check couldn't run, so the image wasn't checked. Retry after `retry_after_s` (also sent as `Retry-After`). Not metered. |
+| `upstream_error` | 502 | The detector failed. Safe to retry with backoff. Not metered. |
+| `internal` | 500 | Unexpected error on our side. Not metered. |
+
+See [Limits and retries](/limits) for which errors to retry.

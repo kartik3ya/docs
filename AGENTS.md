@@ -1,4 +1,3 @@
-> **First-time setup**: Customize this file for your project. Prompt the user to customize this file for their project.
 > For Mintlify product knowledge (components, configuration, writing standards),
 > install the Mintlify skill: `npx skills add https://mintlify.com/docs`
 
@@ -12,10 +11,15 @@
 - Use the Mintlify MCP server, `https://mcp.mintlify.com`, to edit content and settings via MCP
 - Use the Mintlify docs MCP server, `https://www.mintlify.com/docs/mcp`, to query information about using Mintlify via MCP
 
+## About the product
+
+- API docs for Checkobot (checkobot.ai), an AI image and deepfake detection API by SpoofSense. Base URL `https://api.checkobot.ai`.
+- The source of truth is the API itself (`api/` in the checkobot repo). Keep request/response shapes, error codes and limits in sync with it.
+
 ## Terminology
 
-{/* Add product-specific terms and preferred usage */}
-{/* Example: Use "workspace" not "project", "member" not "user" */}
+- Verdicts are `ai` ("AI") and `no_ai` ("No AI detected"). Never call an image "real" or "genuine", or a person "fake".
+- The voice here is SpoofSense (plain, technical), not the Checko mascot.
 
 ## Style preferences
 
@@ -29,5 +33,7 @@
 
 ## Content boundaries
 
-{/* Define what should and shouldn't be documented */}
-{/* Example: Don't document internal admin features */}
+- Never claim detection of audio, liveness, real-time video or "all deepfakes"; IDs and documents only as "coming soon".
+- No single accuracy % without its dataset and profile; no internal benchmarks or model weak spots.
+- Never show 100% or 0%.
+- Don't document internal endpoints (`/v1/quota`, `/v1/account/claim`, thumbnails, image visibility, `/i/...`).

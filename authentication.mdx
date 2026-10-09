@@ -1,0 +1,18 @@
+---
+title: "Authentication"
+description: "Send your API key as a bearer token."
+---
+
+Send your API key as a bearer token on every request:
+
+```bash
+Authorization: Bearer cb_live_…
+```
+
+Create and revoke keys in your [dashboard](https://checkobot.ai/dashboard/keys). Keys come with the API plans.
+
+<Warning>
+  We store only a hash of each key, so copy it when it's shown. Keep keys server-side; never ship them in a browser or app bundle.
+</Warning>
+
+A missing, invalid or revoked key returns `401 unauthorized`. A key whose plan has no API access, or an endpoint that needs a higher plan, returns `403 plan_required`. See [Errors](/errors).

@@ -1,0 +1,50 @@
+---
+title: "Batch"
+description: "POST /v1/check/batch: check 1 to 8 images in one call."
+---
+
+```
+POST https://api.checkobot.ai/v1/check/batch
+```
+
+<Info>Batch is on API Growth and above.</Info>
+
+1 to 8 images per call. Send multipart `files` fields or JSON `images`. Results come back in the same order; a bad image gets its own error and doesn't stop the rest. Only successful images are metered.
+
+The whole batch can be up to 25 MB; each image follows the same rules as [Check an image](/check).
+
+<CodeGroup>
+
+```bash curl
+curl https://api.checkobot.ai/v1/check/batch \
+  -H "Authorization: Bearer $CHECKOBOT_API_KEY" \
+  -F "files=@one.jpg" -F "files=@two.png"
+```
+
+```json JSON
+POST /v1/check/batch
+{
+  "images": [
+    { "image_url": "https://example.com/one.jpg" },
+    { "image_b64": "<base64 of the original file>" }
+  ]
+}
+```
+
+</CodeGroup>
+
+## Response
+
+```json 200 response
+{
+  "results": [
+    { "id": "chk_…", "band": "no_ai", "is_ai": false, "fired": [], "reason": "…", "scores": { … }, … },
+    { "error": { "code": "image_too_small", "message": "This image is too small to check reliably (200×300). …" } }
+  ],
+  "model": "genai_face_v1_1",
+  "bands_version": "0.5",
+  "latency_ms": 1840
+}
+```
+
+Each successful entry in `results` has the same fields as a [single check](/check#response). `store=true` works the same here, for every image in the call.

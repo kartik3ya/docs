@@ -1,0 +1,131 @@
+---
+title: "Check an image"
+description: "POST /v1/check: a verdict, which detector fired, both detector scores and the face box."
+---
+
+```
+POST https://api.checkobot.ai/v1/check
+```
+
+## Request
+
+Send the image one of three ways. The original bytes are scored as sent; don't resize or re-encode first.
+
+- `multipart/form-data` with a `file` field
+- JSON `{"image_url": "https://…"}`: we fetch it (http/https, public addresses only)
+- JSON `{"image_b64": "…"}`: standard base64 of the original file
+
+Accepted: JPEG, PNG, WebP, AVIF, GIF (first frame), BMP and TIFF, up to 20 MB.
+
+<Note>
+  Images under 256 px on the shorter side, or JPEGs below about quality 50, are refused with a reason and aren't metered.
+</Note>
+
+To keep the image, add `store=true`. See [Image storage](/image-storage).
+
+<CodeGroup>
+
+```bash curl
+curl https://api.checkobot.ai/v1/check \
+  -H "Authorization: Bearer $CHECKOBOT_API_KEY" \
+  -F "file=@photo.jpg"
+
+# or from a URL
+curl https://api.checkobot.ai/v1/check \
+  -H "Authorization: Bearer $CHECKOBOT_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"image_url": "https://example.com/photo.jpg"}'
+```
+
+```python Python
+import os, requests
+
+r = requests.post(
+    "https://api.checkobot.ai/v1/check",
+    headers={"Authorization": f"Bearer {os.environ['CHECKOBOT_API_KEY']}"},
+    files={"file": open("photo.jpg", "rb")},
+    timeout=60,
+)
+r.raise_for_status()
+result = r.json()
+print(result["band"], result["fired"], result["reason"])
+```
+
+```javascript JavaScript
+import { readFile } from "node:fs/promises";
+
+const form = new FormData();
+form.append("file", new Blob([await readFile("photo.jpg")]), "photo.jpg");
+
+const r = await fetch("https://api.checkobot.ai/v1/check", {
+  method: "POST",
+  headers: { Authorization: `Bearer ${process.env.CHECKOBOT_API_KEY}` },
+  body: form,
+});
+const result = await r.json();
+console.log(result.band, result.fired, result.reason);
+```
+
+</CodeGroup>
+
+## Response
+
+```json 200 response
+{
+  "id": "chk_Elp2uq1pt4qfqnDo",
+  "band": "ai",
+  "is_ai": true,
+  "fired": ["face_specialist"],
+  "reason": "Face analysis found strong signs that the face was swapped or edited with AI.",
+  "face_found": true,
+  "content_credentials": { "found": false },
+  "image": { "width": 512, "height": 512 },
+  "model": "genai_face_v1_1",
+  "bands_version": "0.5",
+  "latency_ms": 612,
+  "scores": { "v0": 0.1912, "face_specialist": 0.974 },
+  "face_box": [71, 100, 136, 136],
+  "profile": "general",
+  "image_stored": false
+}
+```
+
+<ResponseField name="band" type="string">
+  `ai` or `no_ai` (shown as "No AI detected"). `is_ai` is the same as a boolean.
+</ResponseField>
+
+<ResponseField name="fired" type="string[]">
+  Which detectors crossed their threshold: `v0` (whole image) and/or `face_specialist` (face analysis), plus `content_credentials` when the file carries signed Content Credentials that record AI.
+</ResponseField>
+
+<ResponseField name="reason" type="string">
+  One line explaining the verdict, written for people.
+</ResponseField>
+
+<ResponseField name="content_credentials" type="object">
+  The C2PA manifest embedded in the file, if any: `{ found, signer, verified, ai }`. `verified` means the signer chains to the C2PA trust list and the image is unchanged since signing; only verified manifests can make the verdict `ai`. `{ found: false }` is normal: most sites strip manifests, so it says nothing either way.
+</ResponseField>
+
+<ResponseField name="scores" type="object">
+  Each detector's raw score, 0 to 1. They're on different scales, so don't average or compare them; use `band` and `fired`. `face_specialist` is `null` when no face of at least 64 px was found. Both are `null` when verified Content Credentials record AI: that decides the verdict, so the detectors aren't run.
+</ResponseField>
+
+<ResponseField name="face_box" type="number[] | null">
+  `[x, y, w, h]` of the face checked, in original pixels, or `null`.
+</ResponseField>
+
+<ResponseField name="model" type="string">
+  The detector model. Store it and `bands_version` with the result; verdicts can change when either changes.
+</ResponseField>
+
+<ResponseField name="bands_version" type="string">
+  The version of the thresholds used for this verdict.
+</ResponseField>
+
+<ResponseField name="image_stored" type="boolean">
+  `true` when this image is being kept. See [Image storage](/image-storage).
+</ResponseField>
+
+<Note>
+  "No AI detected" isn't proof an image is real: the detectors can miss some AI images.
+</Note>
