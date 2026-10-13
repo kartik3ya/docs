@@ -20,7 +20,7 @@ Every error has the same shape. Branch on `code`; the `message` is for humans.
 | `image_too_small` | 422 | Shorter side under 256 px. Refused rather than judged; not metered. |
 | `image_too_compressed` | 422 | JPEG quality below about 50. Refused rather than judged; not metered. |
 | `content_refused` | 422 | The image can't be checked. Not metered. Don't retry the same image. |
-| `quota_exceeded` | 429 | Monthly allowance used up on a plan without overage. |
+| `quota_exceeded` | 429 | This month's allowance is used up (or a batch needs more checks than are left). Resets on the 1st (UTC); upgrade for more. |
 | `rate_limited` | 429 | More than 10 requests per second on one key (burst of 10). |
 | `model_warming` | 503 | The detector is starting up after a quiet spell. Retry after `retry_after_s` (also sent as `Retry-After`). Not metered. |
 | `safety_check_unavailable` | 503 | A pre-check couldn't run, so the image wasn't checked. Retry after `retry_after_s` (also sent as `Retry-After`). Not metered. |

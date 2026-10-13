@@ -15,17 +15,15 @@ curl https://api.checkobot.ai/v1/usage \
 ```
 
 ```json 200 response
-{ "plan": "api_starter", "period": "2026-10", "used": 1204, "quota": 5000, "overage": 0 }
+{ "plan": "api_starter", "period": "2026-10", "used": 1204, "quota": 5000, "remaining": 3796 }
 ```
 
-## Overage
+`remaining` is `null` on plans without a fixed allowance (Enterprise).
 
-On API plans, checks past the allowance are allowed and counted as `overage`, billed monthly at your plan's rate:
+## When the allowance runs out
 
-| Plan | Per check past the allowance |
-| --- | --- |
-| API Starter | $0.012 |
-| API Growth | $0.009 |
-| API Scale | $0.006 |
+There are no overage charges. Once a month's checks are used up, every call returns `429` with `quota_exceeded` until the allowance resets on the 1st (UTC). Web checks on the same account count toward the same allowance.
 
-See [pricing](https://checkobot.ai/pricing) for each plan's allowance.
+A batch needs enough checks left for all its images. If it doesn't fit, nothing is counted and the error says how many are left.
+
+To keep going before the reset, upgrade on the [billing page](https://checkobot.ai/dashboard/billing); the new allowance applies straight away. See [pricing](https://checkobot.ai/pricing) for each plan's allowance.
