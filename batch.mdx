@@ -38,7 +38,7 @@ POST /v1/check/batch
 ```json 200 response
 {
   "results": [
-    { "id": "chk_…", "band": "no_ai", "is_ai": false, "fired": [], "reason": "…", "scores": { … }, … },
+    { "id": "chk_…", "is_ai": false, "fired": [], "reason": "…", "scores": { … }, … },
     { "error": { "code": "image_too_small", "message": "This image is too small to check reliably (200×300). …" } }
   ],
   "model": "genai_face_v1_1",

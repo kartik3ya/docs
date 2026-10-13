@@ -48,7 +48,7 @@ r = requests.post(
 )
 r.raise_for_status()
 result = r.json()
-print(result["band"], result["fired"], result["reason"])
+print(result["is_ai"], result["fired"], result["reason"])
 ```
 
 ```javascript JavaScript
@@ -63,7 +63,7 @@ const r = await fetch("https://api.checkobot.ai/v1/check", {
   body: form,
 });
 const result = await r.json();
-console.log(result.band, result.fired, result.reason);
+console.log(result.is_ai, result.fired, result.reason);
 ```
 
 </CodeGroup>
@@ -73,7 +73,6 @@ console.log(result.band, result.fired, result.reason);
 ```json 200 response
 {
   "id": "chk_Elp2uq1pt4qfqnDo",
-  "band": "ai",
   "is_ai": true,
   "fired": ["face_specialist"],
   "reason": "Face analysis found strong signs that the face was swapped or edited with AI.",
@@ -83,19 +82,19 @@ console.log(result.band, result.fired, result.reason);
   "model": "genai_face_v1_1",
   "bands_version": "0.5",
   "latency_ms": 612,
-  "scores": { "v0": 0.1912, "face_specialist": 0.974 },
+  "scores": { "full_image_specialist": 0.1912, "face_specialist": 0.974 },
   "face_box": [71, 100, 136, 136],
   "profile": "general",
   "image_stored": false
 }
 ```
 
-<ResponseField name="band" type="string">
-  `ai` or `no_ai` (shown as "No AI detected"). `is_ai` is the same as a boolean.
+<ResponseField name="is_ai" type="boolean">
+  The verdict: `true` is AI, `false` is "No AI detected". `false` is not proof the image is untouched: the detectors miss some AI images.
 </ResponseField>
 
 <ResponseField name="fired" type="string[]">
-  Which detectors crossed their threshold: `v0` (whole image) and/or `face_specialist` (face analysis), plus `content_credentials` when the file carries signed Content Credentials that record AI.
+  Which detectors crossed their threshold: `full_image_specialist` (whole image) and/or `face_specialist` (face analysis), plus `content_credentials` when the file carries signed Content Credentials that record AI.
 </ResponseField>
 
 <ResponseField name="reason" type="string">
@@ -107,7 +106,7 @@ console.log(result.band, result.fired, result.reason);
 </ResponseField>
 
 <ResponseField name="scores" type="object">
-  Each detector's raw score, 0 to 1. They're on different scales, so don't average or compare them; use `band` and `fired`. `face_specialist` is `null` when no face of at least 64 px was found. Both are `null` when verified Content Credentials record AI: that decides the verdict, so the detectors aren't run.
+  Each detector's raw score, 0 to 1. They're on different scales, so don't average or compare them; use `is_ai` and `fired`. `face_specialist` is `null` when no face of at least 64 px was found. Both are `null` when verified Content Credentials record AI: that decides the verdict, so the detectors aren't run.
 </ResponseField>
 
 <ResponseField name="face_box" type="number[] | null">

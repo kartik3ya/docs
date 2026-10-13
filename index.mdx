@@ -33,7 +33,7 @@ One REST call per image: a verdict, which detector fired, both detector scores a
     )
     r.raise_for_status()
     result = r.json()
-    print(result["band"], result["fired"], result["reason"])
+    print(result["is_ai"], result["fired"], result["reason"])
     ```
 
     ```javascript JavaScript
@@ -48,13 +48,13 @@ One REST call per image: a verdict, which detector fired, both detector scores a
       body: form,
     });
     const result = await r.json();
-    console.log(result.band, result.fired, result.reason);
+    console.log(result.is_ai, result.fired, result.reason);
     ```
 
     </CodeGroup>
   </Step>
   <Step title="Read the verdict">
-    `band` is `ai` or `no_ai` (shown as "No AI detected"), `fired` says which detector crossed its threshold, and `reason` is one line you can show to people. See [Check an image](/check) for every field.
+    `is_ai` is `true` (AI) or `false` (shown as "No AI detected"), `fired` says which detector crossed its threshold, and `reason` is one line you can show to people. See [Check an image](/check) for every field.
   </Step>
 </Steps>
 
